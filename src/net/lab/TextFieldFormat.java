@@ -19,7 +19,6 @@ class TextFieldFormat extends PlainDocument {
     @Override
     public void insertString( int offset, String  str, AttributeSet attr ) throws BadLocationException {
         if (str == null) return;
-
         if ((getLength() + str.length()) <= limit && pattern.matcher(str).matches()) {
             super.insertString(offset, str, attr);
         }
