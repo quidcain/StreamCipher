@@ -5,7 +5,7 @@ import java.io.*;
 /**
  * Created by stoat on 11/22/16.
  */
-public class KeyHolder {
+class KeyHolder {
     Lfsr lfsr;
     public void enterByUser() throws IOException {
         /*int size;
@@ -24,6 +24,9 @@ public class KeyHolder {
             taps[i] = Byte.parseByte(bufferedReader.readLine());
         }
         lfsr = new Lfsr(bits, taps);*/
+        lfsr = new Lfsr(new byte[]{1, 1, 1, 1}, new byte[]{1, 0, 0, 1});
+    }
+    public KeyHolder(){
         lfsr = new Lfsr(new byte[]{1, 1, 1, 1}, new byte[]{1, 0, 0, 1});
     }
     private byte getByteOfKey() {

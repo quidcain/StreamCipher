@@ -17,50 +17,58 @@ public class Main {
         class SingleLfsrPanel extends JPanel {
             SingleLfsrPanel() {
                 super(new GridBagLayout());
+                //setPreferredSize(new Dimension(320,600));
+                JLabel labelInitialKeyState = new JLabel("Начальное состояние ключа");
+                JTextField textFieldInitialKeyState = new JTextField();
+                textFieldInitialKeyState.setDocument(new TextFieldFormat(24));
+                JLabel labelTaps = new JLabel("Параметры");
+                JTextField textFieldTaps = new JTextField();
+                textFieldTaps.setDocument(new TextFieldFormat(24));
                 labelLinkedFile = new JLabel("Файл не привязан");
                 JButton buttonEncrypt = new JButton("Шифернуть");
                 GridBagConstraints c = new GridBagConstraints();
                 c.gridx = 0;
                 c.gridy = 0;
                 c.anchor = GridBagConstraints.CENTER;
-                add(labelLinkedFile,c);
+                add(labelInitialKeyState,c);
                 c.gridx = 0;
                 c.gridy = 1;
+                c.anchor = GridBagConstraints.CENTER;
+                c.fill = GridBagConstraints.HORIZONTAL;
+                add(textFieldInitialKeyState,c);
+                c.gridx = 0;
+                c.gridy = 2;
+                c.anchor = GridBagConstraints.CENTER;
+                c.fill = GridBagConstraints.NONE;
+                add(labelTaps,c);
+                c.gridx = 0;
+                c.gridy = 3;
+                c.anchor = GridBagConstraints.CENTER;
+                c.fill = GridBagConstraints.HORIZONTAL;
+                add(textFieldTaps,c);
+                c.gridx = 0;
+                c.gridy = 4;
+                c.anchor = GridBagConstraints.CENTER;
+                c.fill = GridBagConstraints.NONE;
+                add(labelLinkedFile,c);
+                c.gridx = 0;
+                c.gridy = 5;
                 c.anchor = GridBagConstraints.CENTER;
                 add(buttonEncrypt, c);
                 buttonEncrypt.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
                         byte[] bytesFromFile = null;
-                        try(BufferedInputStream bfrInSt = new BufferedInputStream(new FileInputStream(fileName));
-                            FileOutputStream writer = new FileOutputStream("KeyBinary");){
-                            bytesFromFile = new byte[bfrInSt.available()];
-                            bfrInSt.read(bytesFromFile);
-                        } catch(NullPointerException e){
+                        TreatedFile treatedFile = new TreatedFile();
+                        if (!treatedFile.read(fileName)) {
                             JOptionPane.showMessageDialog(frame, "Не привязан файл", "Ошибка", JOptionPane.ERROR_MESSAGE);
                             return;
-                        }catch (FileNotFoundException e) {
-                            e.printStackTrace();
+                        }
+                        treatedFile.encrypt(new KeyHolder().getBytes(treatedFile.getLength()));
+                        if(!treatedFile.write(fileName)) {
+                            JOptionPane.showMessageDialog(frame, "Не удалось записать файл", "Ошибка", JOptionPane.ERROR_MESSAGE);
                             return;
-                        } catch (IOException e) {
-                            e.printStackTrace();
                         }
-                        KeyHolder keyHolder = new KeyHolder();
-                        try {
-                            keyHolder.enterByUser();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        encrypt(bytesFromFile, keyHolder.getBytes(bytesFromFile.length));
-                        try(BufferedOutputStream bfrOutSt = new BufferedOutputStream(new FileOutputStream(fileName))){
-                            bfrOutSt.write(bytesFromFile);
-                        }catch (FileNotFoundException e) {
-                            System.out.println("huevo" + e.getMessage());
-                            return;
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
                     }
                 });
             }
@@ -121,8 +129,6 @@ public class Main {
         mainPanel.add(new SingleLfsrPanel(), "singleLfsr");
         //mainPanel.add(new AfterAuthPanel(), "Smth another");*/
         frame = new JFrame("Потоковое шифрование");
-
-
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(290, 330);
         frame.setMinimumSize(new Dimension(290, 330));
@@ -139,9 +145,5 @@ public class Main {
             }
         });
     }
-    public static void encrypt(byte[] bytesFromFile, byte[] bytesFromKey) {
-        for (int i = 0; i < bytesFromFile.length; ++i) {
-            bytesFromFile[i] ^= bytesFromKey[i];
-        }
-    }
+
 }

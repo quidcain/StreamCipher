@@ -6,7 +6,7 @@ import java.util.ListIterator;
 /**
  * Created by stoat on 11/21/16.
  */
-public class Lfsr {
+class Lfsr {
     private final long maxKeyLength;
     private long totalBitsGenerated = 0;
     private byte[] bits;
