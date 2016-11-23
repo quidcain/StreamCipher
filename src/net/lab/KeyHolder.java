@@ -1,8 +1,6 @@
 package net.lab;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 
 /**
  * Created by stoat on 11/22/16.
@@ -30,8 +28,17 @@ public class KeyHolder {
     }
     private byte getByteOfKey() {
         byte result = 0;
-        for (int i = 0; i < 8; ++i)
-            result |= lfsr.getStreamBit() << i;
+        try(BufferedOutputStream bfrOutSt = new BufferedOutputStream(new FileOutputStream("KeyBinary", true))) {
+            for (int i = 7; i >= 0; --i){
+                byte bit = lfsr.getStreamBit();
+                bfrOutSt.write(bit + 48);
+                result |= bit << i;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return result;
     }
     public byte[] getBytes(int size){
