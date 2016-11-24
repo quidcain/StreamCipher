@@ -60,7 +60,7 @@ public class Main {
                         byte[] bitsKeyState = new byte[stringKeyState.length()];
                         for (int i = 0; i < bitsKeyState.length; ++i)
                             bitsKeyState[i] = (byte)Character.getNumericValue(stringKeyState.charAt(i));
-                        treatedFile.encrypt(new SingleKeyHolder(bitsKeyState, 24).getBytes(treatedFile.getLength()));
+                        treatedFile.encrypt(new SingleLfsrKeyHolder(bitsKeyState, treatedFile.getLength()));
                         if(!treatedFile.write(fileName)) {
                             JOptionPane.showMessageDialog(frame, "Не удалось записать файл", "Ошибка", JOptionPane.ERROR_MESSAGE);
                             return;
@@ -157,7 +157,7 @@ public class Main {
                         byte[] bitsKeyState3 = new byte[stringRegisterState3.length()];
                         for (int i = 0; i < bitsKeyState3.length; ++i)
                             bitsKeyState3[i] = (byte)Character.getNumericValue(stringRegisterState3.charAt(i));
-                        treatedFile.encrypt(new TripleKeyHolder(bitsKeyState1, 24, bitsKeyState2, 32, bitsKeyState3, 40).getBytes(treatedFile.getLength()));
+                        treatedFile.encrypt(new TripleLfsrKeyHolder(bitsKeyState1, bitsKeyState2, bitsKeyState3, treatedFile.getLength()));
                         if(!treatedFile.write(fileName)) {
                             JOptionPane.showMessageDialog(frame, "Не удалось записать файл", "Ошибка", JOptionPane.ERROR_MESSAGE);
                             return;
@@ -171,7 +171,7 @@ public class Main {
                 super(new GridBagLayout());
                 JLabel labelKey = new JLabel("Ключ");
                 JTextField textFieldKey = new JTextField();
-                labelLinkedFileSecondPanel = new JLabel("Файл не привязан");
+                labelLinkedFileThirdPanel = new JLabel("Файл не привязан");
                 JButton buttonEncrypt = new JButton("Шифернуть");
 
                 GridBagConstraints c = new GridBagConstraints();
@@ -189,7 +189,6 @@ public class Main {
                 add(buttonEncrypt,c);
 
                 buttonEncrypt.addActionListener(new ActionListener() {
-
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
                         //[12][0-9][0-9]
@@ -216,7 +215,7 @@ public class Main {
                                 JOptionPane.showMessageDialog(frame, "Неподходящий формат", "Ошибка", JOptionPane.ERROR_MESSAGE);
                             }
                         }
-                        treatedFile.encrypt(new RcfourKeyHolder(results).getBytes(treatedFile.getLength()));
+                        treatedFile.encrypt(new RcfourKeyHolder(results, treatedFile.getLength()));
                         if(!treatedFile.write(fileName)) {
                             JOptionPane.showMessageDialog(frame, "Не удалось записать файл", "Ошибка", JOptionPane.ERROR_MESSAGE);
                             return;
@@ -258,6 +257,7 @@ public class Main {
                             fileName = file.getName();
                             labelLinkedFileFirstPanel.setText("Файл: " + file.getName());
                             labelLinkedFileSecondPanel.setText("Файл: " + file.getName());
+                            labelLinkedFileThirdPanel.setText("Файл: " + file.getName());
                         }
                     }
                 });
@@ -321,9 +321,6 @@ public class Main {
         frame.setJMenuBar(new MenuBar());
         frame.add(mainPanel);
     }
-
-
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable(){
             @Override
@@ -332,5 +329,4 @@ public class Main {
             }
         });
     }
-
 }

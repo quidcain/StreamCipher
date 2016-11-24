@@ -8,26 +8,22 @@ import java.io.IOException;
 /**
  * Created by stoat on 11/23/16.
  */
-class TripleKeyHolder {
-    private static final byte[][] polynomials = {
-            {24, 4, 3, 1},
-            {32, 28, 27, 1},
-            {40, 21, 19, 2}
-    };
+class TripleLfsrKeyHolder extends StreamKey {
+    private static final byte[][] polynomials = {{24, 4, 3, 1}, {32, 28, 27, 1}, {40, 21, 19, 2}};
     private Lfsr lfsr1, lfsr2, lfsr3;
-    public TripleKeyHolder(byte[] bits1, int tapsAmount1, byte[] bits2, int tapsAmount2, byte[] bits3, int tapsAmount3){
+    public TripleLfsrKeyHolder(byte[] bits1, byte[] bits2, byte[] bits3, int size){
         int i = 0;
-        while (polynomials[i][0] != tapsAmount1) {
+        while (polynomials[i][0] != bits1.length) {
             ++i;
         }
         byte[] taps1 = polynomials[i];
         i = 0;
-        while (polynomials[i][0] != tapsAmount2) {
+        while (polynomials[i][0] != bits2.length) {
             ++i;
         }
         byte[] taps2 = polynomials[i];
         i = 0;
-        while (polynomials[i][0] != tapsAmount3) {
+        while (polynomials[i][0] != bits3.length) {
             ++i;
         }
         byte[] taps3 = polynomials[i];
@@ -35,8 +31,10 @@ class TripleKeyHolder {
         lfsr1 = new Lfsr(bits1, taps1);
         lfsr2 = new Lfsr(bits2, taps2);
         lfsr3 = new Lfsr(bits3, taps3);
+        generateBytes(size);
     }
-    private byte getByteOfKey() {
+    @Override
+    protected byte generateByte() {
         byte result = 0;
         try(BufferedOutputStream resultedStream = new BufferedOutputStream(new FileOutputStream("KeyBinary", true));
             BufferedOutputStream stream1 = new BufferedOutputStream(new FileOutputStream("Lfsr1Binary", true));
@@ -59,11 +57,5 @@ class TripleKeyHolder {
             e.printStackTrace();
         }
         return result;
-    }
-    public byte[] getBytes(int size){
-        byte[] key = new byte[size];
-        for (int i = 0; i < size; ++i)
-            key[i] = getByteOfKey();
-        return key;
     }
 }

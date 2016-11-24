@@ -5,22 +5,20 @@ import java.io.*;
 /**
  * Created by stoat on 11/22/16.
  */
-class SingleKeyHolder {
-    private static final byte[][] polynomials = {
-            {24, 4, 3, 1},
-            {32, 28, 27, 1},
-            {40, 21, 19, 2}
-    };
+class SingleLfsrKeyHolder extends StreamKey {
+    private static final byte[][] polynomials = {{24, 4, 3, 1}, {32, 28, 27, 1}, {40, 21, 19, 2}};
     private Lfsr lfsr;
-    public SingleKeyHolder(byte[] bits, int tapsAmount){
+    public SingleLfsrKeyHolder(byte[] bits, int size){
         int i = 0;
-        while (polynomials[i][0] != tapsAmount) {
+        while (polynomials[i][0] != bits.length) {
             ++i;
         }
         byte[] taps = polynomials[i];
         lfsr = new Lfsr(bits, taps);
+        generateBytes(size);
     }
-    private byte getByteOfKey() {
+    @Override
+    protected byte generateByte() {
         byte result = 0;
         try(BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream("KeyBinary", true))) {
             for (int i = 7; i >= 0; --i){
@@ -35,12 +33,5 @@ class SingleKeyHolder {
         }
         return result;
     }
-    public byte[] getBytes(int size){
-        byte[] key = new byte[size];
-        for (int i = 0; i < size; ++i)
-            key[i] = getByteOfKey();
-        return key;
-    }
 }
-
 

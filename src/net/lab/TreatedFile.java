@@ -7,6 +7,9 @@ import java.io.*;
  */
 class TreatedFile {
     private byte[] bytesFromFile = null;
+    public int getLength() {
+        return bytesFromFile.length;
+    }
     public boolean read(String fileName) {
         try(BufferedInputStream stream = new BufferedInputStream(new FileInputStream(fileName));
             FileOutputStream resetFull = new FileOutputStream("KeyBinary");
@@ -25,12 +28,9 @@ class TreatedFile {
         }
         return true;
     }
-    public int getLength() {
-        return bytesFromFile.length;
-    }
-    public void encrypt(byte[] bytesFromKey) {
+    public void encrypt(StreamKey streamKey) {
         for (int i = 0; i < bytesFromFile.length; ++i) {
-            bytesFromFile[i] ^= bytesFromKey[i];
+            bytesFromFile[i] ^= streamKey.getByte(i);
         }
     }
     public boolean write(String fileName) {
