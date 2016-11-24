@@ -20,9 +20,10 @@ class Lfsr {
     }
     private byte shift() {
         byte output = bits[0];
-        byte freshFirstBit = bits[taps[0] - 1];
+        int max = taps[0] - 1;
+        byte freshFirstBit = bits[max - (taps[0] - 1)];
         for (int j = 1; j < taps.length; ++j)
-            freshFirstBit ^= bits[taps[j] - 1];
+            freshFirstBit ^= bits[max - (taps[j] - 1)];
         for(int i = 0; i < bits.length - 1; ++i)
             bits[i] = bits[i + 1];
         bits[bits.length - 1] = freshFirstBit;

@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+
 /**
  * Created by stoat on 11/21/16.
  */
@@ -14,6 +15,7 @@ public class Main {
     private String fileName;
     private JLabel labelLinkedFileFirstPanel;
     private JLabel labelLinkedFileSecondPanel;
+    private JLabel labelLinkedFileThirdPanel;
     Main() {
         class SingleLfsrPanel extends JPanel {
             SingleLfsrPanel() {
@@ -164,6 +166,66 @@ public class Main {
                 });
             }
         }
+        class RcfourPanel extends JPanel {
+            RcfourPanel() {
+                super(new GridBagLayout());
+                JLabel labelKey = new JLabel("Ключ");
+                JTextField textFieldKey = new JTextField();
+                labelLinkedFileSecondPanel = new JLabel("Файл не привязан");
+                JButton buttonEncrypt = new JButton("Шифернуть");
+
+                GridBagConstraints c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 0;
+                c.anchor = GridBagConstraints.CENTER;
+                add(labelKey,c);
+                c.gridy = 1;
+                c.fill = GridBagConstraints.HORIZONTAL;
+                add(textFieldKey,c);
+                c.gridy = 2;
+                c.fill = GridBagConstraints.NONE;
+                add(labelLinkedFileSecondPanel,c);
+                c.gridy = 3;
+                add(buttonEncrypt,c);
+
+                buttonEncrypt.addActionListener(new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        //[12][0-9][0-9]
+                        /*Pattern pattern = Pattern.compile("([12][0-9][0-9] |[1-9][0-9] |[0-9] )*[12][0-9][0-9]|[1-9][0-9]|[0-9]");
+                        Matcher matcher = pattern.matcher(textFieldKey.getText());
+                        if (!matcher.matches())
+                            JOptionPane.showMessageDialog(frame, "Неподходящий формат", "Ошибка", JOptionPane.ERROR_MESSAGE);*/
+                        TreatedFile treatedFile = new TreatedFile();
+                        if (!treatedFile.read(fileName)) {
+                            JOptionPane.showMessageDialog(frame, "Не привязан файл", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+                        String stringKey = textFieldKey.getText();
+                        String[] items = stringKey.split(" ");
+                        int[] results = new int[items.length];
+
+                        for (int i = 0; i < items.length; i++) {
+                            try {
+                                results[i] = Integer.parseInt(items[i]);
+                                if (results[i] < 0 || results[i] > 255)
+                                    JOptionPane.showMessageDialog(frame, "Числа должны быть в пределе от 0 до 255", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                            } catch (NumberFormatException nfe) {
+                                JOptionPane.showMessageDialog(frame, "Неподходящий формат", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                        treatedFile.encrypt(new RcfourKeyHolder(results).getBytes(treatedFile.getLength()));
+                        if(!treatedFile.write(fileName)) {
+                            JOptionPane.showMessageDialog(frame, "Не удалось записать файл", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+                    }
+                });
+            }
+        }
         class MenuBar extends JMenuBar {
             MenuBar() {
                 JMenu menuFile = new JMenu("Файл");
@@ -176,10 +238,13 @@ public class Main {
                 JMenu menuMode = new JMenu("Режим");
                 JMenuItem menuItemSingle = new JMenuItem("Один регистр");
                 JMenuItem menuItemTriple = new JMenuItem("Три регистра");
+                JMenuItem menuItemRcfour = new JMenuItem("Rc4");
                 menuItemSingle.setActionCommand("singleLfsr");
                 menuItemTriple.setActionCommand("tripleLfsr");
+                menuItemRcfour.setActionCommand("rc4");
                 menuMode.add(menuItemSingle);
                 menuMode.add(menuItemTriple);
+                menuMode.add(menuItemRcfour);
                 add(menuMode);
 
                 menuItemOpen.addActionListener(new ActionListener() {
@@ -226,7 +291,6 @@ public class Main {
                         }
                     }
                 });
-
                 ActionListener actionChangeMode = new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -240,6 +304,7 @@ public class Main {
                 };
                 menuItemSingle.addActionListener(actionChangeMode);
                 menuItemTriple.addActionListener(actionChangeMode);
+                menuItemRcfour.addActionListener(actionChangeMode);
 
             }
         }
@@ -247,15 +312,18 @@ public class Main {
         mainPanel = new JPanel(new CardLayout());
         mainPanel.add(new SingleLfsrPanel(), "singleLfsr");
         mainPanel.add(new TripleLfsrPanel(), "tripleLfsr");
+        mainPanel.add(new RcfourPanel(), "rc4");
         frame = new JFrame("Потоковое шифрование");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //frame.setSize(260, 160);
         frame.setMinimumSize(new Dimension(260, 160));
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.setJMenuBar(new MenuBar());
         frame.add(mainPanel);
     }
+
+
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable(){
             @Override
