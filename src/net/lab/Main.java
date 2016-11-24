@@ -21,9 +21,6 @@ public class Main {
                 JLabel labelInitialRegisterState = new JLabel("Начальное состояние регистра");
                 JTextField textFieldInitialRegisterState = new JTextField();
                 textFieldInitialRegisterState.setDocument(new TextFieldFormat(24));
-                JLabel labelTaps = new JLabel("Параметры");
-                JTextField textFieldTaps = new JTextField();
-                textFieldTaps.setDocument(new TextFieldFormat(24));
                 labelLinkedFileFirstPanel = new JLabel("Файл не привязан");
                 JButton buttonEncrypt = new JButton("Шифернуть");
                 GridBagConstraints c = new GridBagConstraints();
@@ -40,19 +37,9 @@ public class Main {
                 c.gridy = 2;
                 c.anchor = GridBagConstraints.CENTER;
                 c.fill = GridBagConstraints.NONE;
-                add(labelTaps,c);
-                c.gridx = 0;
-                c.gridy = 3;
-                c.anchor = GridBagConstraints.CENTER;
-                c.fill = GridBagConstraints.HORIZONTAL;
-                add(textFieldTaps,c);
-                c.gridx = 0;
-                c.gridy = 4;
-                c.anchor = GridBagConstraints.CENTER;
-                c.fill = GridBagConstraints.NONE;
                 add(labelLinkedFileFirstPanel,c);
                 c.gridx = 0;
-                c.gridy = 5;
+                c.gridy = 3;
                 c.anchor = GridBagConstraints.CENTER;
                 add(buttonEncrypt, c);
                 buttonEncrypt.addActionListener(new ActionListener() {
@@ -63,21 +50,15 @@ public class Main {
                             JOptionPane.showMessageDialog(frame, "Не привязан файл", "Ошибка", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
-
                         String stringKeyState = textFieldInitialRegisterState.getText();
-                        String stringTaps = textFieldTaps.getText();
-                        if (stringKeyState.length() != 24 || stringTaps.length() != 24) {
-                            JOptionPane.showMessageDialog(frame, "Длина регистра и его степень должны быть равны 24", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                        if (stringKeyState.length() != 24) {
+                            JOptionPane.showMessageDialog(frame, "Длина регистра должна быть равна 24", "Ошибка", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                         byte[] bitsKeyState = new byte[stringKeyState.length()];
-                        byte[] bitsTaps= new byte[stringTaps.length()];
                         for (int i = 0; i < bitsKeyState.length; ++i)
                             bitsKeyState[i] = (byte)Character.getNumericValue(stringKeyState.charAt(i));
-                        for (int i = 0; i < bitsKeyState.length; ++i)
-                            bitsTaps[i] = (byte)Character.getNumericValue(stringTaps.charAt(i));
-
-                        treatedFile.encrypt(new SingleKeyHolder(bitsKeyState, bitsTaps).getBytes(treatedFile.getLength()));
+                        treatedFile.encrypt(new SingleKeyHolder(bitsKeyState, 24).getBytes(treatedFile.getLength()));
                         if(!treatedFile.write(fileName)) {
                             JOptionPane.showMessageDialog(frame, "Не удалось записать файл", "Ошибка", JOptionPane.ERROR_MESSAGE);
                             return;
@@ -93,24 +74,16 @@ public class Main {
                 JLabel labelInitialRegisterState1 = new JLabel("Начальное состояние регистра1");
                 JTextField textFieldInitialRegisterState1 = new JTextField();
                 textFieldInitialRegisterState1.setDocument(new TextFieldFormat(24));
-                JLabel labelTaps1 = new JLabel("Его параметры");
-                JTextField textFieldTaps1 = new JTextField();
-                textFieldTaps1.setDocument(new TextFieldFormat(24));
+                textFieldInitialRegisterState1.setPreferredSize(new Dimension(280, 20));
 
                 JLabel labelInitialRegisterState2 = new JLabel("Начальное состояние регистра2");
                 JTextField textFieldInitialRegisterState2 = new JTextField();
                 textFieldInitialRegisterState2.setDocument(new TextFieldFormat(32));
-                JLabel labelTaps2 = new JLabel("Его параметры");
-                JTextField textFieldTaps2 = new JTextField();
-                textFieldTaps2.setDocument(new TextFieldFormat(32));
 
                 JLabel labelInitialRegisterState3 = new JLabel("Начальное состояние регистра3");
                 JTextField textFieldInitialRegisterState3 = new JTextField();
                 textFieldInitialRegisterState3.setDocument(new TextFieldFormat(40));
-                JLabel labelTaps3 = new JLabel("Его параметры");
-                JTextField textFieldTaps3 = new JTextField();
-                textFieldTaps3.setDocument(new TextFieldFormat(40));
-
+                textFieldInitialRegisterState3.setPreferredSize(new Dimension(330, 20));
 
                 labelLinkedFileSecondPanel = new JLabel("Файл не привязан");
                 JButton buttonEncrypt = new JButton("Шифернуть");
@@ -122,52 +95,31 @@ public class Main {
                 add(labelInitialRegisterState1,c);
                 c.gridy = 1;
                 c.fill = GridBagConstraints.HORIZONTAL;
+                c.insets = new Insets(0, 0, 10, 0);
                 add(textFieldInitialRegisterState1,c);
+
                 c.gridy = 2;
                 c.fill = GridBagConstraints.NONE;
-                add(labelTaps1,c);
-                c.gridy = 3;
-                c.fill = GridBagConstraints.HORIZONTAL;
-                c.insets = new Insets(0, 0, 15, 0);
-                add(textFieldTaps1,c);
-
-                c.gridy = 4;
-                c.anchor = GridBagConstraints.CENTER;
                 c.insets = new Insets(0, 0, 0, 0);
                 add(labelInitialRegisterState2,c);
-                c.gridy = 5;
+                c.gridy = 3;
                 c.fill = GridBagConstraints.HORIZONTAL;
+                c.insets = new Insets(0, 0, 10, 0);
                 add(textFieldInitialRegisterState2,c);
-                c.gridy = 6;
+
+                c.gridy = 4;
                 c.fill = GridBagConstraints.NONE;
-                add(labelTaps2,c);
-                c.gridy = 7;
-                c.fill = GridBagConstraints.HORIZONTAL;
-                c.insets = new Insets(0, 0, 15, 0);
-                add(textFieldTaps2,c);
-
-
-                c.gridy = 8;
-                c.anchor = GridBagConstraints.CENTER;
                 c.insets = new Insets(0, 0, 0, 0);
                 add(labelInitialRegisterState3,c);
-                c.gridy = 9;
+                c.gridy = 5;
                 c.fill = GridBagConstraints.HORIZONTAL;
+                c.insets = new Insets(0, 0, 10, 0);
                 add(textFieldInitialRegisterState3,c);
-                c.gridy = 10;
-                c.fill = GridBagConstraints.NONE;
-                add(labelTaps3,c);
-                c.gridy = 11;
-                c.fill = GridBagConstraints.HORIZONTAL;
-                c.insets = new Insets(0, 0, 15, 0);
-                add(textFieldTaps3,c);
-
-
-                c.gridy = 12;
+                c.gridy = 6;
                 c.fill = GridBagConstraints.NONE;
                 c.insets = new Insets(0, 0, 0, 0);
                 add(labelLinkedFileSecondPanel,c);
-                c.gridy = 13;
+                c.gridy = 7;
                 add(buttonEncrypt, c);
                 buttonEncrypt.addActionListener(new ActionListener() {
                     @Override
@@ -177,49 +129,33 @@ public class Main {
                             JOptionPane.showMessageDialog(frame, "Не привязан файл", "Ошибка", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
-
                         String stringRegisterState1 = textFieldInitialRegisterState1.getText();
-                        String stringTaps1 = textFieldTaps1.getText();
-                        if (stringRegisterState1.length() != 24 || stringTaps1.length() != 24) {
-                            JOptionPane.showMessageDialog(frame, "Длина регистра 1 и его степень должны быть равны 24", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                        if (stringRegisterState1.length() != 24 ) {
+                            JOptionPane.showMessageDialog(frame, "Длина регистра 1 должна быть равна 24", "Ошибка", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                         byte[] bitsKeyState1 = new byte[stringRegisterState1.length()];
-                        byte[] bitsTaps1= new byte[stringTaps1.length()];
                         for (int i = 0; i < bitsKeyState1.length; ++i)
                             bitsKeyState1[i] = (byte)Character.getNumericValue(stringRegisterState1.charAt(i));
-                        for (int i = 0; i < bitsKeyState1.length; ++i)
-                            bitsTaps1[i] = (byte)Character.getNumericValue(stringTaps1.charAt(i));
 
                         String stringRegisterState2 = textFieldInitialRegisterState2.getText();
-                        String stringTaps2 = textFieldTaps2.getText();
-                        if (stringRegisterState2.length() != 32 || stringTaps2.length() != 32) {
-                            JOptionPane.showMessageDialog(frame, "Длина регистра 2 и его степень должны быть равны 32", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                        if (stringRegisterState2.length() != 32) {
+                            JOptionPane.showMessageDialog(frame, "Длина регистра 2 должна быть равна 32", "Ошибка", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                         byte[] bitsKeyState2 = new byte[stringRegisterState2.length()];
-                        byte[] bitsTaps2= new byte[stringTaps2.length()];
                         for (int i = 0; i < bitsKeyState2.length; ++i)
                             bitsKeyState2[i] = (byte)Character.getNumericValue(stringRegisterState2.charAt(i));
-                        for (int i = 0; i < bitsKeyState2.length; ++i)
-                            bitsTaps2[i] = (byte)Character.getNumericValue(stringTaps2.charAt(i));
-
 
                         String stringRegisterState3 = textFieldInitialRegisterState3.getText();
-                        String stringTaps3 = textFieldTaps3.getText();
-                        if (stringRegisterState3.length() != 40 || stringTaps3.length() != 40) {
-                            JOptionPane.showMessageDialog(frame, "Длина регистра 3 и его степень должны быть равны 40", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                        if (stringRegisterState3.length() != 40) {
+                            JOptionPane.showMessageDialog(frame, "Длина регистра 3 должна быть равна 40", "Ошибка", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                         byte[] bitsKeyState3 = new byte[stringRegisterState3.length()];
-                        byte[] bitsTaps3= new byte[stringTaps3.length()];
                         for (int i = 0; i < bitsKeyState3.length; ++i)
                             bitsKeyState3[i] = (byte)Character.getNumericValue(stringRegisterState3.charAt(i));
-                        for (int i = 0; i < bitsKeyState3.length; ++i)
-                            bitsTaps3[i] = (byte)Character.getNumericValue(stringTaps3.charAt(i));
-
-
-                        treatedFile.encrypt(new TripleKeyHolder(bitsKeyState1, bitsTaps1, bitsKeyState2, bitsTaps2, bitsKeyState3, bitsTaps3).getBytes(treatedFile.getLength()));
+                        treatedFile.encrypt(new TripleKeyHolder(bitsKeyState1, 24, bitsKeyState2, 32, bitsKeyState3, 40).getBytes(treatedFile.getLength()));
                         if(!treatedFile.write(fileName)) {
                             JOptionPane.showMessageDialog(frame, "Не удалось записать файл", "Ошибка", JOptionPane.ERROR_MESSAGE);
                             return;
@@ -299,7 +235,7 @@ public class Main {
                         if (e.getActionCommand().equals("singleLfsr"))
                             frame.setMinimumSize(new Dimension(260, 160));
                         else if (e.getActionCommand().equals("tripleLfsr"))
-                            frame.setMinimumSize(new Dimension(260, 320));
+                            frame.setMinimumSize(new Dimension(340, 320));
                     }
                 };
                 menuItemSingle.addActionListener(actionChangeMode);

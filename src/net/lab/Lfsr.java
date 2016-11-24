@@ -14,23 +14,17 @@ class Lfsr {
     private LinkedList<Byte> stream = new LinkedList<>();
     private ListIterator iterator;
     public Lfsr(byte[] bits, byte[] taps) {
-        maxKeyLength = (long)Math.pow(2,(double)bits.length);
+        maxKeyLength = (long)Math.pow(2,(double)bits.length) - 1;
         this.bits = bits;
         this.taps = taps;
     }
     private byte shift() {
         byte output = bits[0];
-        int i = bits.length - 1;
-        while(taps[i] != 1)
-            --i;
-        byte freshFirstBit = bits[i--];
-        while (i >= 0) {
-            freshFirstBit ^= taps[i] * bits[i];
-            --i;
-        }
-        for(i = 0; i < bits.length - 1; ++i) {
+        byte freshFirstBit = bits[taps[0] - 1];
+        for (int j = 1; j < taps.length; ++j)
+            freshFirstBit ^= bits[taps[j] - 1];
+        for(int i = 0; i < bits.length - 1; ++i)
             bits[i] = bits[i + 1];
-        }
         bits[bits.length - 1] = freshFirstBit;
         return output;
     }

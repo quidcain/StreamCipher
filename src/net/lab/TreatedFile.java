@@ -9,7 +9,10 @@ class TreatedFile {
     private byte[] bytesFromFile = null;
     public boolean read(String fileName) {
         try(BufferedInputStream stream = new BufferedInputStream(new FileInputStream(fileName));
-            FileOutputStream writer = new FileOutputStream("KeyBinary")){
+            FileOutputStream resetFull = new FileOutputStream("KeyBinary");
+            FileOutputStream reset1 = new FileOutputStream("Lfsr1Binary");
+            FileOutputStream reset2 = new FileOutputStream("Lfsr2Binary");
+            FileOutputStream reset3 = new FileOutputStream("Lfsr3Binary")){
             bytesFromFile = new byte[stream.available()];
             stream.read(bytesFromFile);
         } catch(NullPointerException e){

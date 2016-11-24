@@ -9,8 +9,29 @@ import java.io.IOException;
  * Created by stoat on 11/23/16.
  */
 class TripleKeyHolder {
-    Lfsr lfsr1, lfsr2, lfsr3;
-    public TripleKeyHolder(byte[] bits1, byte[] taps1, byte[] bits2, byte[] taps2, byte[] bits3, byte[] taps3){
+    private static final byte[][] polynomials = {
+            {24, 4, 3, 1},
+            {32, 28, 27, 1},
+            {40, 21, 19, 2}
+    };
+    private Lfsr lfsr1, lfsr2, lfsr3;
+    public TripleKeyHolder(byte[] bits1, int tapsAmount1, byte[] bits2, int tapsAmount2, byte[] bits3, int tapsAmount3){
+        int i = 0;
+        while (polynomials[i][0] != tapsAmount1) {
+            ++i;
+        }
+        byte[] taps1 = polynomials[i];
+        i = 0;
+        while (polynomials[i][0] != tapsAmount2) {
+            ++i;
+        }
+        byte[] taps2 = polynomials[i];
+        i = 0;
+        while (polynomials[i][0] != tapsAmount3) {
+            ++i;
+        }
+        byte[] taps3 = polynomials[i];
+
         lfsr1 = new Lfsr(bits1, taps1);
         lfsr2 = new Lfsr(bits2, taps2);
         lfsr3 = new Lfsr(bits3, taps3);
