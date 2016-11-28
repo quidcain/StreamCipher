@@ -15,7 +15,8 @@ class TreatedFile {
             FileOutputStream resetFull = new FileOutputStream("KeyBinary");
             FileOutputStream reset1 = new FileOutputStream("Lfsr1Binary");
             FileOutputStream reset2 = new FileOutputStream("Lfsr2Binary");
-            FileOutputStream reset3 = new FileOutputStream("Lfsr3Binary")){
+            FileOutputStream reset3 = new FileOutputStream("Lfsr3Binary");
+            FileOutputStream rc4 = new FileOutputStream("Rc4")){
             bytesFromFile = new byte[stream.available()];
             stream.read(bytesFromFile);
         } catch(NullPointerException e){

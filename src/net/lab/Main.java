@@ -24,7 +24,7 @@ public class Main {
                 JTextField textFieldInitialRegisterState = new JTextField();
                 textFieldInitialRegisterState.setDocument(new TextFieldFormat(24));
                 labelLinkedFileFirstPanel = new JLabel("Файл не привязан");
-                JButton buttonEncrypt = new JButton("Шифернуть");
+                JButton buttonEncrypt = new JButton("Зашифровать");
                 GridBagConstraints c = new GridBagConstraints();
                 c.gridx = 0;
                 c.gridy = 0;
@@ -88,7 +88,7 @@ public class Main {
                 textFieldInitialRegisterState3.setPreferredSize(new Dimension(330, 20));
 
                 labelLinkedFileSecondPanel = new JLabel("Файл не привязан");
-                JButton buttonEncrypt = new JButton("Шифернуть");
+                JButton buttonEncrypt = new JButton("Зашифровать");
 
                 GridBagConstraints c = new GridBagConstraints();
                 c.gridx = 0;
@@ -172,7 +172,7 @@ public class Main {
                 JLabel labelKey = new JLabel("Ключ");
                 JTextField textFieldKey = new JTextField();
                 labelLinkedFileThirdPanel = new JLabel("Файл не привязан");
-                JButton buttonEncrypt = new JButton("Шифернуть");
+                JButton buttonEncrypt = new JButton("Зашифровать");
 
                 GridBagConstraints c = new GridBagConstraints();
                 c.gridx = 0;
@@ -216,11 +216,13 @@ public class Main {
                             }
                         }
                         treatedFile.encrypt(new RcfourKeyHolder(results, treatedFile.getLength()));
+                        /*RcfourKeyHolder rc4 = new RcfourKeyHolder(results, treatedFile.getLength());
+                        treatedFile.encrypt(rc4);
+                        rc4.displayKey();*/
                         if(!treatedFile.write(fileName)) {
                             JOptionPane.showMessageDialog(frame, "Не удалось записать файл", "Ошибка", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
-
                     }
                 });
             }
